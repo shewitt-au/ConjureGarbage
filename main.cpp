@@ -9,7 +9,7 @@ template <typename T>
 void print_vector(const vector<T> &vec) {
     for (auto i=0; i<vec.size(); ++i) {
         if (i!=0) cout << ", ";
-        std::cout << vec[i];
+        cout << vec[i];
     }
     cout << endl;
 }
