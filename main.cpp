@@ -23,7 +23,7 @@ int main()
 
         sort(shuffled.begin(), shuffled.end(), [](int l, int r) {
             if (l%5==0 && r%5==0)
-                return true;
+                return true; // violate strict weak ordering if both divisible by 5
 
             return l<r;
         });
