@@ -1,3 +1,5 @@
+#include "checks.hpp"
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -34,12 +36,12 @@ int main()
         shuffle(shuffled.begin(), shuffled.end(), g);
 
         auto pre_sort = shuffled;
-        sort(shuffled.begin(), shuffled.end(), [](int l, int r) {
+        sort(shuffled.begin(), shuffled.end(), /*checked_pedicate(*/[](int l, int r) {
             if (l%5==0 && r%5==0)
                 return true; // violate strict weak ordering if both divisible by 5
 
             return l<r;
-        });
+        })/*)*/;
 
         if (!is_permutation(reference_vec.begin(), reference_vec.end(), shuffled.begin())) {
             cout << endl << "Times shuffled: " << times_shuffled << endl << endl;
