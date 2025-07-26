@@ -32,10 +32,12 @@ int main()
     random_device rd;
     mt19937 g(rd());
 
-    for (size_t times_shuffled=1; true; ++times_shuffled) {
+    size_t times_shuffled = 1;
+    vector<int> pre_sort;
+    for (; times_shuffled<1000; ++times_shuffled) {
         shuffle(shuffled.begin(), shuffled.end(), g);
 
-        auto pre_sort = shuffled;
+        pre_sort = shuffled;
         sort(shuffled.begin(), shuffled.end(), /*checked_pedicate(*/[](int l, int r) {
             if (l%5==0 && r%5==0)
                 return true; // violate strict weak ordering if both divisible by 5
@@ -44,17 +46,17 @@ int main()
         })/*)*/;
 
         if (!is_permutation(reference_vec.begin(), reference_vec.end(), shuffled.begin())) {
-            cout << endl << "Times shuffled: " << times_shuffled << endl << endl;
-            cout << "vector before sorting:" << endl;
-            print_vector(pre_sort);
-            cout << endl;
-            cout << "vector after sorting:" << endl;
-            print_vector(shuffled);
-            cout << endl;
-            
-            return 0;
+            break;
         }
     }
+
+    cout << endl << "Times shuffled: " << times_shuffled << endl << endl;
+    cout << "vector before sorting:" << endl;
+    print_vector(pre_sort);
+    cout << endl;
+    cout << "vector after sorting:" << endl;
+    print_vector(shuffled);
+    cout << endl;
 
     return 0;
 }
