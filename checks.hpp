@@ -66,7 +66,7 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
 {
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
-            if (!(pred(*l, *r) && !pred(*r, *l)))
+            if (!(!pred(*l, *r) && !pred(*r, *l)))
                 DEBUGBREAK();
         }
     }
@@ -81,12 +81,12 @@ void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
         if (pred(*l, *(l+1))) {
             Iter r = l+1;
             for (; r<e-1 && pred(*r, *(r+1)); ++r) {}
-            transitivity(l, r, pred);
+            transitivity(l, r+1, pred);
             l = r;
         } else if (!pred(*(l+1), *l)) {
             Iter r = l+1;
             for (; r<e-1 && !pred(*(r+1), *r) && !pred(*r, *(r+1)); ++r) {}
-            transitivity_of_incomparability(l, r, pred);
+            transitivity_of_incomparability(l, r+1, pred);
             l = r;
         }
         else {
