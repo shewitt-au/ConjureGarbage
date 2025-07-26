@@ -11,7 +11,7 @@ using namespace std;
 template <typename T>
 void print_vector(const vector<T> &vec) {
     for (auto i=0; i<vec.size(); ++i) {
-        if (i%20 == 0)
+        if (i!=0 && i%20 == 0)
             cout << endl;
         cout << setw(3) << vec[i] << " ";
     }
