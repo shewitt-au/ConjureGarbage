@@ -105,3 +105,5 @@ template<typename RandomIt, typename Compare>
 void checked_stable_sort(RandomIt first, RandomIt last, Compare comp) {
     std::stable_sort(first, last, checked_pedicate(comp));
 }
+
+#undef DEBUGBREAK
