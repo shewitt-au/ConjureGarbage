@@ -89,7 +89,7 @@ void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
         else {
             // !pred(*l, *(l+1)) && pred(*(l+1), *l)
             // So l>=r && l>r
-            DEBUGBREAK(); // Not sorted
+            DEBUGBREAK(); // NOT sorted!
             ++l;
         }
     }
