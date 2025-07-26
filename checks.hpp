@@ -37,43 +37,65 @@ auto checked_pedicate(const Predicate pred) {
     };
 }
 
-// For all i in [b, e), pred(i, i+1) is true.
+// Transitivity:
+// For all x,y.z in [b, e)
+//  if pred(x,y) and pred(y,z) are true then pred(x,z) is true
+//
+// All elements in [b, e) should have already been sorted so
+// b[n]<b[n+1]. We'll assume this even though with a dogy predicate
+// it may not be the case.
 template <typename Iter, typename Predicate>
 void transitivity(const Iter b, const Iter e, const Predicate pred)
 {
-    if (e-b < 2)
-        return;
-
-    for (Iter l=b; l<e-1; ++l) {
-        for (Iter r=l+1; r<e; ++r) {
+    for (Iter l=b; l<e-2; ++l) {
+        for (Iter r=l+2; r<e; ++r) {
             if (!pred(*l, *r))
                 DEBUGBREAK();
         }
     }
 }
 
-// For all i in [b, e), pred(i, i+1) is false and pred(i+1, i) is false.
+// For all x,y.z in [b, e)
+//  if !pred(x,y) && !pred(y,x) && !pred(y,z) && !pred(z,y)
+//  then
+//  !pred(x,z) && !pred(z,x)
+//
 // Incomparability is perhaps better undersood as equality.
 template <typename Iter, typename Predicate>
 void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate pred)
 {
-    if (e-b < 2)
-        return;
-
-    for (Iter l=b; l<e-1; ++l) {
-        for (Iter r=l+1; r<e; ++r) {
-            if (pred(*l, *r) || pred(*r, *l))
+    for (Iter l=b; l<e-2; ++l) {
+        for (Iter r=l+2; r<e; ++r) {
+            if (!(pred(*l, *r) && !pred(*r, *l)))
                 DEBUGBREAK();
+        }
+    }
+}
+
+template <typename Iter, typename Predicate>
+void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
+    for (Iter l=b; l<e-1;) {
+        if (pred(*l, *(l+1))) {
+            Iter r = l+1;
+            for (; r<e-1 && pred(*r, *(r+1)); ++r) {}
+            transitivity(l, r, pred);
+            l = r;
+        } else if (!pred(*(l+1), *l)) {
+            Iter r = l+1;
+            for (; r<e-1 && !pred(*(r+1), *r) && !pred(*r, *(r+1)); ++r) {}
+            transitivity_of_incomparability(l, r, pred);
+            l = r;
         }
     }
 }
 
 template<typename RandomIt, typename Compare>
 void checked_sort(RandomIt first, RandomIt last, Compare comp) {
-    return std::sort(first, last, checked_pedicate(comp));
+    std::sort(first, last, checked_pedicate(comp));
+    post_sort_check(first, last, checked_pedicate(comp));
 }
 
 template<typename RandomIt, typename Compare>
 void checked_stable_sort(RandomIt first, RandomIt last, Compare comp) {
-    return std::stable_sort(first, last, checked_pedicate(comp));
+    std::stable_sort(first, last, checked_pedicate(comp));
 }
