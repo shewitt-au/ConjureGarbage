@@ -86,6 +86,12 @@ void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
             transitivity_of_incomparability(l, r, pred);
             l = r;
         }
+        else {
+            // !pred(*l, *(l+1)) && pred(*(l+1), *l)
+            // So l>=r && l>r
+            DEBUGBREAK(); // Not sorted
+            ++l;
+        }
     }
 }
 
