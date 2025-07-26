@@ -1,6 +1,7 @@
 #include "checks.hpp"
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -10,8 +11,9 @@ using namespace std;
 template <typename T>
 void print_vector(const vector<T> &vec) {
     for (auto i=0; i<vec.size(); ++i) {
-        if (i!=0) cout << ", ";
-        cout << vec[i];
+        if (i%20 == 0)
+            cout << endl;
+        cout << setw(4) << vec[i];
     }
     cout << endl;
 }
