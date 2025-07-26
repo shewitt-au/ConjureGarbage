@@ -74,6 +74,9 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
 
 template <typename Iter, typename Predicate>
 void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
+    if (b==e)
+        return;
+
     for (Iter l=b; l<e-1;) {
         if (pred(*l, *(l+1))) {
             Iter r = l+1;
