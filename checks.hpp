@@ -1,11 +1,10 @@
 #pragma once
 
-#include <intrin.h>
-
 // Hack
 #define OS_WINDOWS
 
 #if defined(OS_WINDOWS)
+    #include <intrin.h>
     #define DEBUGBREAK() __debugbreak()
 #else
     #include <csignal>
