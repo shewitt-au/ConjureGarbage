@@ -28,9 +28,6 @@ int main()
         shuffled.push_back(i);
     }
 
-    //reference_vec = {1, 1, 1, 2, 3, 4};
-    //post_sort_check(reference_vec.begin(), reference_vec.end(), std::less<int>());
-
     cout << "Reference vector:" << endl;
     print_vector(reference_vec);
 
