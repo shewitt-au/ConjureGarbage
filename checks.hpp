@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 // Hack
 #define OS_WINDOWS
 
@@ -64,4 +66,14 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
                 DEBUGBREAK();
         }
     }
+}
+
+template<typename RandomIt, typename Compare>
+void checked_sort(RandomIt first, RandomIt last, Compare comp) {
+    return std::sort(first, last, checked_pedicate(comp));
+}
+
+template<typename RandomIt, typename Compare>
+void checked_stable_sort(RandomIt first, RandomIt last, Compare comp) {
+    return std::stable_sort(first, last, checked_pedicate(comp));
 }

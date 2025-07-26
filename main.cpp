@@ -40,7 +40,7 @@ int main()
         shuffle(shuffled.begin(), shuffled.end(), g);
 
         pre_sort = shuffled;
-        sort(shuffled.begin(), shuffled.end(), /*checked_pedicate(*/[](int l, int r) {
+        checked_sort(shuffled.begin(), shuffled.end(), /*checked_pedicate(*/[](int l, int r) {
             if (l%5==0 && r%5==0)
                 return true; // violate strict weak ordering if both divisible by 5
 
