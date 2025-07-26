@@ -13,7 +13,7 @@ void print_vector(const vector<T> &vec) {
     for (auto i=0; i<vec.size(); ++i) {
         if (i%20 == 0)
             cout << endl;
-        cout << setw(4) << vec[i];
+        cout << setw(3) << vec[i] << " ";
     }
     cout << endl;
 }
