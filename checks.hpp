@@ -6,8 +6,18 @@
 #define OS_WINDOWS
 
 #if defined(OS_WINDOWS)
-    #include <intrin.h>
-    #define DEBUGBREAK() __debugbreak()
+    // __debugbreak is not seem reliable. It sometimes silently terminates
+    // when debugging. The debugger? MingW64? I'm not sure who's to blame
+    // but the Win32 function 'DebugBreak' seems to work reliably.
+    //#define DEBUGBREAK() __debugbreak()
+
+    #include <windows.h>
+    #define DEBUGBREAK() DebugBreak()
+
+    //#include <iostream>
+    //#define DEBUGBREAK() std::cout << "DB" << std::endl
+
+    //#define DEBUGBREAK() int crap=0
 #else
     #include <csignal>
     #define DEBUGBREAK() raise(SIGTRAP)
@@ -49,8 +59,13 @@ void transitivity(const Iter b, const Iter e, const Predicate pred)
 {
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
-            if (!pred(*l, *r))
+            if (!pred(*l, *r)) {
                 DEBUGBREAK();
+                // For all x (at index n) in [b, e-1): 
+                //  pred(b[n], b[n+1]) == true
+                // pred(*l, *r) returned false however. This is in violation
+                // of a strict weak ordering.
+            }
         }
     }
 }
@@ -66,8 +81,13 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
 {
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
-            if (!(!pred(*l, *r) && !pred(*r, *l)))
+            if (!(!pred(*l, *r) && !pred(*r, *l))) {
                 DEBUGBREAK();
+                // For all x (at index n) in [b, e-1): 
+                //  pred(b[n], b[n+1]) == false && pred(b[n+1], b[n]) == false
+                // (!pred(*l, *r) && !pred(*r, *l)) returned false however. This is in violation
+                // of a strict weak ordering.
+            }
         }
     }
 }
@@ -101,7 +121,7 @@ void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
 template<typename RandomIt, typename Compare>
 void checked_sort(RandomIt first, RandomIt last, Compare comp) {
     std::sort(first, last, checked_pedicate(comp));
-    post_sort_check(first, last, checked_pedicate(comp));
+    post_sort_check(first, last, comp);
 }
 
 template<typename RandomIt, typename Compare>

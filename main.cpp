@@ -11,7 +11,7 @@ using namespace std;
 template <typename T>
 void print_vector(const vector<T> &vec) {
     for (auto i=0; i<vec.size(); ++i) {
-        if (i!=0 && i%20 == 0)
+        if (i!=0 && i%10 == 0)
             cout << endl;
         cout << setw(3) << vec[i] << " ";
     }
@@ -36,7 +36,7 @@ int main()
 
     size_t times_shuffled = 1;
     vector<int> pre_sort;
-    for (; times_shuffled<1000; ++times_shuffled) {
+    for (; times_shuffled<=1000; ++times_shuffled) {
         shuffle(shuffled.begin(), shuffled.end(), g);
 
         pre_sort = shuffled;
@@ -48,11 +48,12 @@ int main()
         });
 
         if (!is_permutation(reference_vec.begin(), reference_vec.end(), shuffled.begin())) {
+            ++times_shuffled;
             break;
         }
     }
 
-    cout << endl << "Times shuffled: " << times_shuffled << endl << endl;
+    cout << endl << "Times shuffled: " << times_shuffled-1 << endl << endl;
     cout << "vector before sorting:" << endl;
     print_vector(pre_sort);
     cout << endl;
