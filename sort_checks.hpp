@@ -28,6 +28,8 @@ auto checked_pedicate(const Predicate pred) {
     };
 }
 
+namespace impl {
+
 // Transitivity:
 // For all x,y.z in [b, e)
 //  if pred(x,y) and pred(y,z) are true then pred(x,z) is true
@@ -72,6 +74,8 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
         }
     }
 }
+
+} // namespace impl
 
 template <typename Iter, typename Predicate>
 void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
