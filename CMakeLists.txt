@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 project(main CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
+    checks.cpp
     main.cpp
 )

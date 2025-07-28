@@ -2,26 +2,7 @@
 
 #include <algorithm>
 
-// Hack
-#define OS_WINDOWS
-
-#if defined(OS_WINDOWS)
-    // __debugbreak is not seem reliable. It sometimes silently terminates
-    // when debugging. The debugger? MingW64? I'm not sure who's to blame
-    // but the Win32 function 'DebugBreak' seems to work reliably.
-    //#define DEBUGBREAK() __debugbreak()
-
-    #include <windows.h>
-    #define DEBUGBREAK() DebugBreak()
-
-    //#include <iostream>
-    //#define DEBUGBREAK() std::cout << "DB" << std::endl
-
-    //#define DEBUGBREAK() int crap=0
-#else
-    #include <csignal>
-    #define DEBUGBREAK() raise(SIGTRAP)
-#endif
+void sortPredicateError(const char *pMsg);
 
 // Logical implication
 inline bool imp(bool l, bool r) {
@@ -33,15 +14,15 @@ auto checked_pedicate(const Predicate pred) {
     return [=](const auto &l, const auto &r) {
         // Irreflexivity: !(x<x)
         if (pred(l,l))
-            DEBUGBREAK();
+            sortPredicateError("Irreflexivity: pred(l,l) is false");
         if (pred(r,r))
-            DEBUGBREAK();
+            sortPredicateError("Irreflexivity: pred(r,r) is false");
 
         // Asymmetry: if l<r not r<l
         if (!imp(pred(l,r), !pred(r,l)))
-            DEBUGBREAK();
+            sortPredicateError("Asymmetry: if pred(l,r) then !pred(r,l) is false");
         if (!imp(pred(r,l), !pred(l,r)))
-            DEBUGBREAK();
+            sortPredicateError("Asymmetry: if pred(r,l) then !pred(l,r) is false");
 
         return pred(l, r);
     };
@@ -60,7 +41,7 @@ void transitivity(const Iter b, const Iter e, const Predicate pred)
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
             if (!pred(*l, *r)) {
-                DEBUGBREAK();
+                sortPredicateError("Transitivity");
                 // For all x (at index n) in [b, e-1): 
                 //  pred(b[n], b[n+1]) == true
                 // pred(*l, *r) returned false however. This is in violation
@@ -82,7 +63,7 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
             if (!(!pred(*l, *r) && !pred(*r, *l))) {
-                DEBUGBREAK();
+                sortPredicateError("Transitivity of incomparability");
                 // For all x (at index n) in [b, e-1): 
                 //  pred(b[n], b[n+1]) == false && pred(b[n+1], b[n]) == false
                 // (!pred(*l, *r) && !pred(*r, *l)) returned false however. This is in violation
@@ -112,7 +93,7 @@ void post_sort_check(const Iter b, const Iter e, const Predicate pred) {
         else {
             // !pred(*l, *(l+1)) && pred(*(l+1), *l)
             // So l>=r && l>r
-            DEBUGBREAK(); // NOT sorted!
+            sortPredicateError("Not sorted"); // NOT sorted!
             ++l;
         }
     }
@@ -128,5 +109,3 @@ template<typename RandomIt, typename Compare>
 void checked_stable_sort(RandomIt first, RandomIt last, Compare comp) {
     std::stable_sort(first, last, checked_pedicate(comp));
 }
-
-#undef DEBUGBREAK

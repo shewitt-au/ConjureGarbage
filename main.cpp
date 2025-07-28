@@ -1,4 +1,4 @@
-//#include "checks.hpp"
+#include "checks.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -40,7 +40,7 @@ int main()
         shuffle(shuffled.begin(), shuffled.end(), g);
 
         pre_sort = shuffled;
-        sort(shuffled.begin(), shuffled.end(), [](int l, int r) {
+        checked_sort(shuffled.begin(), shuffled.end(), [](int l, int r) {
             if (l%5==0 && r%5==0)
                 return true; // violate strict weak ordering if both divisible by 5
 
