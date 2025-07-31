@@ -3,6 +3,7 @@
 #include <algorithm>
 
 void sortPredicateError(const char *pMsg);
+void transitivityError(const char *pMsg);
 
 // Logical implication
 inline bool imp(bool l, bool r) {
@@ -43,7 +44,7 @@ void transitivity(const Iter b, const Iter e, const Predicate pred)
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
             if (!pred(*l, *r)) {
-                sortPredicateError("Transitivity");
+                transitivityError("Transitivity");
                 // For all x (at index n) in [b, e-1): 
                 //  pred(b[n], b[n+1]) == true
                 // pred(*l, *r) returned false however. This is in violation
@@ -65,7 +66,7 @@ void transitivity_of_incomparability(const Iter b, const Iter e, const Predicate
     for (Iter l=b; l<e-2; ++l) {
         for (Iter r=l+2; r<e; ++r) {
             if (!(!pred(*l, *r) && !pred(*r, *l))) {
-                sortPredicateError("Transitivity of incomparability");
+                transitivityError("Transitivity of incomparability");
                 // For all x (at index n) in [b, e-1): 
                 //  pred(b[n], b[n+1]) == false && pred(b[n+1], b[n]) == false
                 // (!pred(*l, *r) && !pred(*r, *l)) returned false however. This is in violation
