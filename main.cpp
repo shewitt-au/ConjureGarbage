@@ -1,5 +1,3 @@
-//#include "sort_checks.hpp"
-
 #include <iostream>
 #include <iomanip>
 #include <vector>
